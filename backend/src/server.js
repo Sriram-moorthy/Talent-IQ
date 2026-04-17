@@ -51,6 +51,11 @@ if (process.env.NODE_ENV !== "production") {
 }
 
 export default async (req, res) => {
-  await connectDB();
-  return app(req, res);
+  try {
+    await connectDB();
+    return app(req, res);
+  } catch (error) {
+    console.error("Critical error during serverless execution:", error);
+    res.status(500).json({ error: "Internal Server Error", details: error.message });
+  }
 };
